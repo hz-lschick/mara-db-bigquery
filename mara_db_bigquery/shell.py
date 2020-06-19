@@ -3,9 +3,10 @@ from mara_db_bigquery import dbs
 
 @query_command.register(dbs.BigQueryDB)
 def __(db: dbs.BigQueryDB, timezone: str = None, echo_queries: bool = None):
-    assert all(v is None for v in [timezone, echo_queries]), "unimplemented parameter for BigQueryDB"
+    assert all(v is None for v in [timezone]), "unimplemented parameter for BigQueryDB"
+    # note: we ignore echo_queries parameter here by default (TODO!)
 
-    return ('bq query --use_legacy_sql=False'
+    return ('bq query --use_legacy_sql=False --quiet --headless'
             +(f' --location={db.location}' if db.location else '')
             +(f' --project_id={db.project}' if db.project else '')
             +(f' --dataset_id={db.dataset}' if db.dataset else '')
